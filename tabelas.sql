@@ -21,16 +21,6 @@ CREATE TABLE pessoa (
 
 CREATE TABLE reserva (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    id_pessoa BIGINT,
-    id_local BIGINT,
-    data_inicio DATETIME NOT NULL,
-    data_fim DATETIME NOT NULL,
-    FOREIGN KEY (id_pessoa) REFERENCES pessoa(id),
-    FOREIGN KEY (id_local) REFERENCES local(id)
-);
-
-CREATE TABLE reserva (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     id_pessoa BIGINT NOT NULL,
     id_local BIGINT NOT NULL,
     data_inicio DATETIME NOT NULL,
@@ -38,6 +28,8 @@ CREATE TABLE reserva (
     CONSTRAINT fk_reserva_pessoa FOREIGN KEY (id_pessoa) REFERENCES pessoa(id),
     CONSTRAINT fk_reserva_local FOREIGN KEY (id_local) REFERENCES local(id)
 );
+
+
 
 
 ALTER TABLE reserva

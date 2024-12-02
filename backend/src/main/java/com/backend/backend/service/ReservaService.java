@@ -3,16 +3,16 @@ package com.backend.backend.service;
 import com.backend.backend.entity.Local;
 import com.backend.backend.entity.Pessoa;
 import com.backend.backend.entity.Reserva;
+import com.backend.backend.repository.ReservaRepository;
 import com.backend.backend.repository.LocalRepository;
 import com.backend.backend.repository.PessoaRepository;
-import com.backend.backend.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
+import java.util.Optional;
 
 @Service
 public class ReservaService {
@@ -37,17 +37,17 @@ public class ReservaService {
             throw new RuntimeException("A data/hora de término deve ser posterior à data/hora de início.");
         }
 
-        // Busca o local
+        // Verifica se o local existe
         Local local = localRepository.findById(localId)
-                .orElseThrow(() -> new RuntimeException("Local não encontrado com ID: " + localId));
+                .orElseThrow(() -> new RuntimeException("Local não encontrado."));
 
-        // Busca a pessoa
+        // Verifica se a pessoa existe
         Pessoa pessoa = pessoaRepository.findById(pessoaId)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + pessoaId));
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada."));
 
         // Verifica conflitos de reservas para o mesmo local
-        boolean conflito = reservaRepository.existsByLocalIdAndDataHoraInicioLessThanEqualAndDataHoraFimGreaterThanEqual(
-                localId, endDateTime, startDateTime
+        boolean conflito = reservaRepository.existsByLocalAndDataInicioLessThanEqualAndDataFimGreaterThanEqual(
+                local, endDateTime, startDateTime
         );
 
         if (conflito) {
@@ -56,24 +56,26 @@ public class ReservaService {
 
         // Cria a reserva
         Reserva reserva = new Reserva();
-        reserva.setLocalId(local.getId()); // Define o ID do local
-        reserva.setPessoaId(pessoaId); // Define o ID da pessoa diretamente
-        reserva.setDataHoraInicio(startDateTime);
-        reserva.setDataHoraFim(endDateTime);
+        reserva.setLocal(local); // Define o local
+        reserva.setPessoa(pessoa); // Define a pessoa
+        reserva.setDataInicio(startDateTime);
+        reserva.setDataFim(endDateTime);
 
         // Salva a reserva no banco de dados
         return reservaRepository.save(reserva);
-
     }
 
     // Listar reservas por local
     public List<Reserva> listarReservasPorLocal(Long localId) {
-        return reservaRepository.findByLocalId(localId);
+        Local local = localRepository.findById(localId)
+                .orElseThrow(() -> new RuntimeException("Local não encontrado."));
+        return reservaRepository.findByLocal(local);
     }
 
     // Listar reservas por pessoa
     public List<Reserva> listarReservasPorPessoa(Long pessoaId) {
-        return reservaRepository.findByPessoaId(pessoaId);
+        Pessoa pessoa = pessoaRepository.findById(pessoaId)
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada."));
+        return reservaRepository.findByPessoa(pessoa);
     }
 }
-

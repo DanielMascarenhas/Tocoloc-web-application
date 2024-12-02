@@ -9,6 +9,8 @@ import com.backend.backend.repository.PessoaRepository;
 import com.backend.backend.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -68,21 +70,30 @@ public class ReservaService {
     }
 
 
-
     public List<ReservaDTO> listarReservasPorPessoa(Long pessoaId) {
-        Pessoa pessoa = this.pessoaRepository.findById(pessoaId)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada."));
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        // Mapeando Reservas para DTO com Collectors.toList()
-        return this.reservaRepository.findByPessoa(pessoa).stream()
-                .map(reserva -> new ReservaDTO(
-                        reserva.getId(),
-                        reserva.getLocal().getId(),
-                        reserva.getLocal().getNome(), // Supondo que Local tenha um campo "nome"
-                        reserva.getDataInicio().toString(),
-                        reserva.getDataFim().toString()
-                ))
-                .collect(Collectors.toList()); // Usando Collectors.toList()
+        return reservaRepository.findByPessoaId(pessoaId).stream().map(reserva -> {
+            // Obtenha o nome do local associado
+            String localNome = reserva.getLocal().getNome(); // Ajuste baseado na entidade Local
+
+            return new ReservaDTO(
+                    reserva.getId(),
+                    reserva.getLocal().getId(), // ID do local
+                    localNome,
+                    reserva.getDataInicio().format(dateFormatter), // Data início formatada
+                    reserva.getDataFim().format(dateFormatter) // Data fim formatada
+            );
+        }).collect(Collectors.toList());
     }
+
+
+    // Método auxiliar para buscar o nome do local
+    private String getLocalNome(Long localId) {
+        // Substitua pela lógica correta para buscar o nome do local
+        // Por exemplo, pode ser um repositório de locais ou chamada de outro serviço
+        return "Nome do Local"; // Exemplo fixo
+    }
+
 
 }

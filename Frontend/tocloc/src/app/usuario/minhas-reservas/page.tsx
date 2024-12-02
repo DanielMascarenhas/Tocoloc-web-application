@@ -7,12 +7,11 @@ import { useAuth } from '@/context/AuthContext'; // Importa o contexto de autent
 interface Reserva {
   id: number;
   localId: number;
-  userId: number;
-  startDate: string;
-  endDate: string;
-  startTime: string;
-  endTime: string;
+  localNome: string; // Adicione esta propriedade
+  dataInicio: string; // Adicione esta propriedade
+  dataFim: string; // Adicione esta propriedade
 }
+
 
 interface Local {
   id: number;
@@ -73,6 +72,18 @@ const MinhasReservas: React.FC = () => {
     }
   };
 
+  // Função para formatar a data e hora
+  const formatarDataHora = (data: string) => {
+    const date = new Date(data);
+    return date.toLocaleString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
   if (loading) return <div>Carregando suas reservas...</div>;
   if (error) return <div className="text-red-500">Erro: {error}</div>;
 
@@ -87,20 +98,16 @@ const MinhasReservas: React.FC = () => {
             <tr>
               <th className="px-4 py-2 text-left">Local</th>
               <th className="px-4 py-2 text-left">Data Início</th>
-              <th className="px-4 py-2 text-left">Hora Início</th>
               <th className="px-4 py-2 text-left">Data Fim</th>
-              <th className="px-4 py-2 text-left">Hora Fim</th>
               <th className="px-4 py-2 text-right"></th>
             </tr>
           </thead>
           <tbody>
             {reservas.map((reserva) => (
               <tr key={reserva.id} className="border-t">
-                <td className="px-4 py-2">{locais[reserva.localId] || 'Local não encontrado'}</td>
-                <td className="px-4 py-2">{reserva.startDate}</td>
-                <td className="px-4 py-2">{reserva.startTime}</td>
-                <td className="px-4 py-2">{reserva.endDate}</td>
-                <td className="px-4 py-2">{reserva.endTime}</td>
+                <td className="px-4 py-2">{reserva.localNome}</td>
+                <td className="px-4 py-2">{formatarDataHora(reserva.dataInicio)}</td>
+                <td className="px-4 py-2">{formatarDataHora(reserva.dataFim)}</td>
                 <td className="px-4 py-2 text-right">
                   <button
                     onClick={() => handleCancelar(reserva.id)}

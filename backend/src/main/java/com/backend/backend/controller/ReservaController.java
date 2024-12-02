@@ -6,6 +6,8 @@ import com.backend.backend.service.ReservaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/reservas")
 public class ReservaController {
@@ -16,7 +18,6 @@ public class ReservaController {
     // Criar uma nova reserva
     @PostMapping("/reservar")
     public Reserva criarReserva(@RequestBody ReservaRequest reservaRequest) {
-        // Chamando o service com os dados do DTO
         return reservaService.criarReserva(
                 reservaRequest.getLocalId(),
                 reservaRequest.getStartDate(),
@@ -25,5 +26,11 @@ public class ReservaController {
                 reservaRequest.getEndTime(),
                 reservaRequest.getPessoaId()
         );
+    }
+
+    // Listar reservas por pessoa (userId)
+    @GetMapping
+    public List<Reserva> listarReservasPorPessoa(@RequestParam Long userId) {
+        return reservaService.listarReservasPorPessoa(userId);
     }
 }

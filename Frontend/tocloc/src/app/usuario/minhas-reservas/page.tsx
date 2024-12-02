@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import LoginLayout from '@/app/usuario/layout';
+import { useAuth } from '@/context/AuthContext'; // Importa o contexto de autenticação
 
 interface Reserva {
   id: number;
@@ -20,24 +20,29 @@ interface Local {
 }
 
 const MinhasReservas: React.FC = () => {
+  const { user } = useAuth(); // Obtem o usuário autenticado
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [locais, setLocais] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-  const userId = 1; // Substitua pelo ID do usuário autenticado (ex.: contexto, token, etc.)
 
   useEffect(() => {
     const fetchReservas = async () => {
       try {
         setLoading(true);
 
+        if (!user) {
+          setError('Usuário não autenticado.');
+          return;
+        }
+
         // Buscar reservas do usuário
-        const reservasResponse = await axios.get(`/api/reservas?userId=${userId}`);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const reservasResponse = await axios.get(`${apiUrl}/api/reservas?userId=${user.id}`);
         setReservas(reservasResponse.data);
 
         // Buscar nomes dos locais
-        const locaisResponse = await axios.get('/api/locais');
+        const locaisResponse = await axios.get(`${apiUrl}/api/locais`);
         const locaisMap: Record<number, string> = {};
         locaisResponse.data.forEach((local: Local) => {
           locaisMap[local.id] = local.nome;
@@ -52,17 +57,15 @@ const MinhasReservas: React.FC = () => {
     };
 
     fetchReservas();
-  }, [userId]);
+  }, [user]);
 
   const handleCancelar = async (id: number) => {
     try {
       const confirm = window.confirm('Tem certeza que deseja cancelar esta reserva?');
       if (!confirm) return;
 
-      // Chamar API para deletar a reserva
-      await axios.delete(`/api/reservas/${id}`);
-
-      // Atualizar a lista de reservas localmente após deletar
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      await axios.delete(`${apiUrl}/api/reservas/${id}`);
       setReservas((prev) => prev.filter((reserva) => reserva.id !== id));
     } catch (error) {
       console.error('Erro ao cancelar a reserva:', error);
@@ -74,7 +77,7 @@ const MinhasReservas: React.FC = () => {
   if (error) return <div className="text-red-500">Erro: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 text-black">
       <h1 className="text-2xl font-bold mb-4">Minhas Reservas</h1>
       {reservas.length === 0 ? (
         <p>Você não tem reservas.</p>

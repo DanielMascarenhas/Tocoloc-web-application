@@ -85,19 +85,17 @@ const MinhasReservas: React.FC = () => {
         <table className="table-auto w-full bg-white shadow-lg rounded-lg">
           <thead className="bg-gray-200">
             <tr>
-              <th className="px-4 py-2 text-left">ID</th>
               <th className="px-4 py-2 text-left">Local</th>
               <th className="px-4 py-2 text-left">Data Início</th>
               <th className="px-4 py-2 text-left">Hora Início</th>
               <th className="px-4 py-2 text-left">Data Fim</th>
               <th className="px-4 py-2 text-left">Hora Fim</th>
-              <th className="px-4 py-2 text-right">Ação</th>
+              <th className="px-4 py-2 text-right"></th>
             </tr>
           </thead>
           <tbody>
             {reservas.map((reserva) => (
               <tr key={reserva.id} className="border-t">
-                <td className="px-4 py-2">{reserva.id}</td>
                 <td className="px-4 py-2">{locais[reserva.localId] || 'Local não encontrado'}</td>
                 <td className="px-4 py-2">{reserva.startDate}</td>
                 <td className="px-4 py-2">{reserva.startTime}</td>

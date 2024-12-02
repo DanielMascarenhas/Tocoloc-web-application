@@ -1,5 +1,6 @@
 package com.backend.backend.service;
 
+import com.backend.backend.dto.*;
 import com.backend.backend.entity.Local;
 import com.backend.backend.entity.Pessoa;
 import com.backend.backend.entity.Reserva;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservaService {
@@ -57,15 +59,30 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
-    public List<Reserva> listarReservasPorPessoa(Long pessoaId) {
-        Pessoa pessoa = pessoaRepository.findById(pessoaId)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada."));
-        return reservaRepository.findByPessoa(pessoa);
-    }
+
 
     public List<Reserva> listarReservasPorLocal(Long localId) {
         Local local = localRepository.findById(localId)
                 .orElseThrow(() -> new RuntimeException("Local não encontrado."));
         return reservaRepository.findByLocal(local);
     }
+
+
+
+    public List<ReservaDTO> listarReservasPorPessoa(Long pessoaId) {
+        Pessoa pessoa = this.pessoaRepository.findById(pessoaId)
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada."));
+
+        // Mapeando Reservas para DTO com Collectors.toList()
+        return this.reservaRepository.findByPessoa(pessoa).stream()
+                .map(reserva -> new ReservaDTO(
+                        reserva.getId(),
+                        reserva.getLocal().getId(),
+                        reserva.getLocal().getNome(), // Supondo que Local tenha um campo "nome"
+                        reserva.getDataInicio().toString(),
+                        reserva.getDataFim().toString()
+                ))
+                .collect(Collectors.toList()); // Usando Collectors.toList()
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.backend.backend.controller;
 
+import com.backend.backend.dto.ReservaDTO;
 import com.backend.backend.dto.ReservaRequest;
 import com.backend.backend.entity.Reserva;
 import com.backend.backend.service.ReservaService;
@@ -30,7 +31,7 @@ public class ReservaController {
 
     // Listar reservas por pessoa (userId)
     @GetMapping
-    public List<Reserva> listarReservasPorPessoa(@RequestParam Long userId) {
+    public List<ReservaDTO> listarReservasPorPessoa(@RequestParam Long userId) {
         return reservaService.listarReservasPorPessoa(userId);
     }
 }

@@ -2,8 +2,6 @@ CREATE DATABASE reservas;
 
 USE reservas;
 
-
-
 CREATE TABLE local (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -18,7 +16,6 @@ CREATE TABLE pessoa (
     admin BOOLEAN NOT NULL
 );
 
-
 CREATE TABLE reserva (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     id_pessoa BIGINT NOT NULL,
@@ -28,14 +25,6 @@ CREATE TABLE reserva (
     CONSTRAINT fk_reserva_pessoa FOREIGN KEY (id_pessoa) REFERENCES pessoa(id),
     CONSTRAINT fk_reserva_local FOREIGN KEY (id_local) REFERENCES local(id)
 );
-
-
-
-
-ALTER TABLE reserva
-DROP COLUMN data_hora_inicio,
-DROP COLUMN data_hora_fim;
-
 
 INSERT INTO local (nome, descricao) VALUES
 ('Parque das Flores', 'Um parque arborizado com muitas flores e trilhas para caminhada.'),
@@ -48,7 +37,6 @@ INSERT INTO local (nome, descricao) VALUES
 ('Biblioteca Pública', 'Espaço para leitura e estudo, com um vasto acervo de livros.'),
 ('Mirante da Serra', 'Ponto turístico com uma vista incrível das montanhas.'),
 ('Praça da Liberdade', 'Praça histórica com monumentos e áreas verdes.');
-
 
 INSERT INTO pessoa (nome, email, senha, admin) VALUES
 ('Alice Silva', 'alice.silva@example.com', 'senha123', false),

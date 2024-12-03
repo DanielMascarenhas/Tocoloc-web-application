@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const publicRoutes = ['/auth/login', '/auth/register', '/public-page'];
+  const publicRoutes = ['/auth/login', '/auth/register', '/public-page', '/'];
   const adminRoutes = ['/admin']; // Rotas acessíveis apenas por administradores
   const userRoutes = ['/usuario']; // Rotas acessíveis apenas por usuários comuns
 

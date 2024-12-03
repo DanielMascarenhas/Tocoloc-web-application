@@ -31,10 +31,10 @@ const Login: React.FC = () => {
         // Salvar o token no localStorage
         localStorage.setItem('userToken', token);
         // Salvar os dados do usuário no localStorage
-        localStorage.setItem('user', JSON.stringify({ id, name, email }));
+        localStorage.setItem('user', JSON.stringify({ id, name, email, admin }));
   
         // Atualizar o contexto do usuário
-        setUser({ id, name, email });
+        setUser({ id, name, email, admin });
   
         // Redirecionar baseado no tipo de usuário
         if (admin) {

@@ -102,6 +102,22 @@ public class ReservaService {
         reservaRepository.deleteById(reservaId);
     }
 
+    public List<ReservaDTO> listarTodasReservas() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        return reservaRepository.findAll().stream().map(reserva -> {
+            String localNome = reserva.getLocal().getNome();
+            return new ReservaDTO(
+                    reserva.getId(),
+                    reserva.getLocal().getId(),
+                    localNome,
+                    reserva.getDataInicio().format(dateFormatter),
+                    reserva.getDataFim().format(dateFormatter)
+            );
+        }).collect(Collectors.toList());
+    }
+
+
 
 
 }

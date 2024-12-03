@@ -7,11 +7,11 @@ import { useAuth } from '@/context/AuthContext'; // Importa o contexto de autent
 interface Reserva {
   id: number;
   localId: number;
-  localNome: string; // Adicione esta propriedade
-  dataInicio: string; // Adicione esta propriedade
-  dataFim: string; // Adicione esta propriedade
+  localNome: string;
+  dataInicio: string;
+  dataFim: string;
+  pessoaNome: string; // Adiciona a propriedade para o nome da pessoa
 }
-
 
 interface Local {
   id: number;
@@ -35,20 +35,12 @@ const MinhasReservas: React.FC = () => {
           return;
         }
 
-        // Buscar reservas do usuário
+        // Buscar todas as reservas
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        const reservasResponse = await axios.get(`${apiUrl}/api/reservas?userId=${user.id}`);
+        const reservasResponse = await axios.get(`${apiUrl}/api/reservas/listar`);
         setReservas(reservasResponse.data);
-
-        // Buscar nomes dos locais
-        const locaisResponse = await axios.get(`${apiUrl}/api/locais`);
-        const locaisMap: Record<number, string> = {};
-        locaisResponse.data.forEach((local: Local) => {
-          locaisMap[local.id] = local.nome;
-        });
-        setLocais(locaisMap);
       } catch (error) {
-        console.error('Erro ao buscar reservas ou locais:', error);
+        console.error('Erro ao buscar reservas:', error);
         setError('Não foi possível carregar suas reservas.');
       } finally {
         setLoading(false);
@@ -99,6 +91,7 @@ const MinhasReservas: React.FC = () => {
               <th className="px-4 py-2 text-left">Local</th>
               <th className="px-4 py-2 text-left">Data Início</th>
               <th className="px-4 py-2 text-left">Data Fim</th>
+              <th className="px-4 py-2 text-left">Reservado Por</th>
               <th className="px-4 py-2 text-right"></th>
             </tr>
           </thead>
@@ -108,6 +101,7 @@ const MinhasReservas: React.FC = () => {
                 <td className="px-4 py-2">{reserva.localNome}</td>
                 <td className="px-4 py-2">{formatarDataHora(reserva.dataInicio)}</td>
                 <td className="px-4 py-2">{formatarDataHora(reserva.dataFim)}</td>
+                <td className="px-4 py-2">{reserva.pessoaNome}</td>
                 <td className="px-4 py-2 text-right">
                   <button
                     onClick={() => handleCancelar(reserva.id)}

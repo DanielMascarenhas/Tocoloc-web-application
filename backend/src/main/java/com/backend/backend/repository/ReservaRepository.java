@@ -1,7 +1,6 @@
 package com.backend.backend.repository;
 
 import com.backend.backend.entity.Local;
-import com.backend.backend.entity.Pessoa;
 import com.backend.backend.entity.Reserva;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

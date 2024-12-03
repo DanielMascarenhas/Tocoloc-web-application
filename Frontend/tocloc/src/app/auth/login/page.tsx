@@ -51,28 +51,37 @@ const Login: React.FC = () => {
       setError('Houve um erro ao tentar fazer login. Tente novamente.');
     }
   };
-  
-  
-  
 
   return (
-      <div className="max-w-sm mx-auto p-4">
-        <h1 className="text-xl font-bold mb-4 text-blue-500">Login</h1>
-        {error && <div className="text-red-500">{error}</div>} 
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button onClick={handleLogin}>Login</Button>
+    <div className="max-w-sm mx-auto p-4">
+      <h1 className="text-xl font-bold mb-4 text-blue-500">Login</h1>
+      {error && <div className="text-red-500 mb-4">{error}</div>} 
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Senha"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button onClick={handleLogin} className="w-full mb-4">Login</Button>
+
+      <div className="text-center mt-4">
+        <p className="text-gray-500">
+          Não tem conta?{' '}
+          <a
+            href="/auth/register"
+            className="text-blue-500 hover:underline"
+          >
+            Cadastre-se
+          </a>
+        </p>
       </div>
+    </div>
   );
 };
 

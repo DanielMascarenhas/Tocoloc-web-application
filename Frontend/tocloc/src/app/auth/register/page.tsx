@@ -2,8 +2,11 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import Button from '@/components/Button';
+import { useRouter } from 'next/navigation';
 
 const Register: React.FC = () => {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,11 +40,10 @@ const Register: React.FC = () => {
     }
   };
 
-
   return (
     <div className="max-w-sm mx-auto p-4 text-center">
       <h1 className="text-xl font-bold mb-4 text-blue-500">Registrar</h1>
-      {message && <p className="text-red-500">{message}</p>}
+      {message && <p className="text-red-500 mb-4">{message}</p>}
       <input
         type="text"
         placeholder="Nome"
@@ -64,12 +66,24 @@ const Register: React.FC = () => {
         className="w-full p-2 mb-2 border border-gray-300 rounded text-black"
       />
 
-      <button
+      <Button
         onClick={handleRegister}
-        className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+        
       >
         Registrar
-      </button>
+      </Button>
+
+      <div className="mt-4">
+        <p className="text-gray-500">
+          Já tem conta?{' '}
+          <a
+            href="/auth/login"
+            className="text-blue-500 hover:underline"
+          >
+            Faça login
+          </a>
+        </p>
+      </div>
     </div>
   );
 };

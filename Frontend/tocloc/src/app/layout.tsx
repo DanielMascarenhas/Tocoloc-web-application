@@ -15,17 +15,18 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata = {
-  title: 'Meu App',
-  description: 'Descrição do meu app',
+export const metadata: Metadata = {
+  title: "Tocloc",
+  description: "Descrição do meu app",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="h-full flex flex-col justify-center items-center gap-10
-        bg-[url('/Background_esportes.jpg')] bg-cover bg-fixed h-screen flex items-center justify-center">
-        {/* Envolva os filhos com o AuthProvider */}
+    <html lang="en" className="h-full">
+      <body
+        className="h-full flex flex-col bg-[url('/Background_esportes.jpg')] bg-cover bg-fixed"
+      >
+        {/* Provedor de autenticação */}
         <AuthProvider>
           {children}
         </AuthProvider>

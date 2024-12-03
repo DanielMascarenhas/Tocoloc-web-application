@@ -12,11 +12,11 @@ const UsuarioPage: React.FC = () => {
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold mb-6">Bem-vindo, Administrador!</h1>
       <div className="space-y-4 space-x-4">
-        <Button onClick={() => router.push('/admin/reservas')}>
-            Reservas
+        <Button onClick={() => router.push('/admin/usuarios')}>
+            Usuarios
         </Button>
-        <Button onClick={() => router.push('/admin/reservar')}>
-          Reservar
+        <Button onClick={() => router.push('/admin/reservas')}>
+          Reservas
         </Button>
         <Button onClick={() => router.push('/admin/locais')}>
           Locais

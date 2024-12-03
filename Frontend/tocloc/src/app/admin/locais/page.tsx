@@ -47,6 +47,13 @@ const VerLocais: React.FC = () => {
   const handleUpdateLocal = async () => {
     if (!editLocal) return;
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    console.log(`${apiUrl}/api/locais/${editLocal.id}`, {
+      nome: newLocalName,
+      descricao: newLocalDescription,
+  });
+  
+
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       await axios.put(`${apiUrl}/api/locais/${editLocal.id}`, {

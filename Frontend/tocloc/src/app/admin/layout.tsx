@@ -45,12 +45,15 @@ export default function UsuarioLayout({ children }: { children: React.ReactNode 
         </a>
 
         <nav className="flex space-x-4 gap-4">
-          <Button onClick={() => router.push('/admin/reservas')} /* className="text-white hover:text-blue-400 border border-blue-400 px-4 py-2" */>
+
+        <Button onClick={() => router.push('/admin/usuarios')}>
+            Usuarios
+          </Button>
+
+          <Button onClick={() => router.push('/admin/reservas')}>
             Reservas
           </Button>
-          <Button onClick={() => router.push('/admin/reservar')} >
-            Reservar
-          </Button>
+          
           <Button onClick={() => router.push('/admin/locais')} >
             Locais
           </Button>

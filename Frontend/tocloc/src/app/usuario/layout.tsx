@@ -37,7 +37,9 @@ export default function UsuarioLayout({ children }: { children: React.ReactNode 
   }
 
   return (
+    
     <div className="min-h-screen flex flex-col bg-gray-900 opacity-90 text-white">
+
       {/* Cabeçalho com tamanho fixo */}
       <header className="p-4 bg-gray-800 flex items-center justify-between">
         <a href="/usuario" className="text-blue-400 hover:underline flex items-center">

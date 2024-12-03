@@ -14,11 +14,11 @@ const Welcome: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-500 to-blue-800 text-white">
+    <div className="min-h-screen flex flex-col items-center justify-center  text-white">
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">Bem-vindo ao Tocloc!</h1>
         <p className="text-xl mb-8">
-          É hora de tocar, locar e jogar com a melhor plataforma esportiva.
+          Tocloc! Tocou, locou e jogou com a melhor plataforma esportiva.
         </p>
 
         <Button
@@ -27,20 +27,7 @@ const Welcome: React.FC = () => {
         </Button>
       </div>
 
-      <footer className="absolute bottom-4 text-center">
-        <p className="text-sm text-gray-200">
-          Precisa de ajuda?{' '}
-          <a href="/ajuda" className="underline text-white">
-            Clique aqui
-          </a>
-        </p>
-        <button
-          onClick={logout}
-          className="mt-2 text-sm text-red-500 underline hover:text-red-600"
-        >
-          Sair
-        </button>
-      </footer>
+      
     </div>
   );
 };

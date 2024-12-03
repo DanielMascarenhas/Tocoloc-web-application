@@ -14,8 +14,8 @@ const VerLocais: React.FC = () => {
   const [locais, setLocais] = useState<Local[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
-  // Estados para o formulário de cadastro
+  const [editLocal, setEditLocal] = useState<Local | null>(null);
+
   const [newLocalName, setNewLocalName] = useState('');
   const [newLocalDescription, setNewLocalDescription] = useState('');
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -37,9 +37,39 @@ const VerLocais: React.FC = () => {
     fetchLocais();
   }, []);
 
-  const handleEdit = (id: number) => {
-    console.log(`Editar local com ID: ${id}`);
-    // Redirecione para uma página de edição ou abra um modal para editar
+  const handleEdit = (local: Local) => {
+    setEditLocal(local);
+    setNewLocalName(local.nome);
+    setNewLocalDescription(local.descricao);
+    setIsFormVisible(true);
+  };
+
+  const handleUpdateLocal = async () => {
+    if (!editLocal) return;
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      await axios.put(`${apiUrl}/api/locais/${editLocal.id}`, {
+        nome: newLocalName,
+        descricao: newLocalDescription,
+      });
+
+      setLocais((prevLocais) =>
+        prevLocais.map((local) =>
+          local.id === editLocal.id
+            ? { ...local, nome: newLocalName, descricao: newLocalDescription }
+            : local
+        )
+      );
+      setEditLocal(null);
+      setNewLocalName('');
+      setNewLocalDescription('');
+      setIsFormVisible(false);
+      setError('');
+    } catch (error) {
+      console.error('Erro ao atualizar o local:', error);
+      setError('Houve um problema ao tentar atualizar o local. Tente novamente.');
+    }
   };
 
   const handleDelete = async (id: number) => {
@@ -54,16 +84,12 @@ const VerLocais: React.FC = () => {
       `Você tem certeza que deseja excluir o local: ${localToDelete.nome}?`
     );
 
-    if (!confirmDelete) {
-      console.log(`Exclusão cancelada para o local: ${localToDelete.nome}`);
-      return;
-    }
+    if (!confirmDelete) return;
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       await axios.delete(`${apiUrl}/api/locais/${id}`);
       setLocais((prevLocais) => prevLocais.filter((local) => local.id !== id));
-      console.log(`Local com nome ${localToDelete.nome} excluído com sucesso`);
     } catch (error) {
       console.error(`Erro ao excluir local com ID ${id}:`, error);
       alert('Erro ao excluir local. Tente novamente.');
@@ -108,12 +134,10 @@ const VerLocais: React.FC = () => {
     <div className="min-h-screen bg-gray-100 p-6 text-black">
       <h1 className="text-2xl font-bold mb-4">Locais Disponíveis</h1>
 
-      {/* Botão para exibir o formulário de cadastro */}
       <Button onClick={() => setIsFormVisible((prev) => !prev)}>
-        {isFormVisible ? 'Cancelar Cadastro' : 'Cadastrar Novo Local'}
+        {isFormVisible ? 'Cancelar' : 'Novo Local'}
       </Button>
 
-      {/* Formulário de cadastro de local */}
       {isFormVisible && (
         <div className="mt-4 bg-white p-4 rounded shadow-md">
           <div>
@@ -134,15 +158,26 @@ const VerLocais: React.FC = () => {
             />
           </div>
           <div className="mt-4 flex space-x-2">
-            <Button onClick={handleAddLocal}>Cadastrar</Button>
-            <Button onClick={() => setIsFormVisible(false)} cor="bg-gray-500 text-white hover:bg-gray-600">
+            {editLocal ? (
+              <Button onClick={handleUpdateLocal}>Salvar Alterações</Button>
+            ) : (
+              <Button onClick={handleAddLocal}>Cadastrar</Button>
+            )}
+            <Button
+              onClick={() => {
+                setEditLocal(null);
+                setNewLocalName('');
+                setNewLocalDescription('');
+                setIsFormVisible(false);
+              }}
+              cor="bg-gray-500 text-white hover:bg-gray-600"
+            >
               Cancelar
             </Button>
           </div>
         </div>
       )}
 
-      {/* Lista de locais */}
       <ul className="space-y-4 mt-6">
         {locais.map((local) => (
           <li
@@ -154,7 +189,7 @@ const VerLocais: React.FC = () => {
               <p>{local.descricao}</p>
             </div>
             <div className="flex space-x-2">
-              <Button onClick={() => handleEdit(local.id)}>Editar</Button>
+              <Button onClick={() => handleEdit(local)}>Editar</Button>
               <Button
                 onClick={() => handleDelete(local.id)}
                 cor="bg-red-500 text-white hover:bg-red-600"

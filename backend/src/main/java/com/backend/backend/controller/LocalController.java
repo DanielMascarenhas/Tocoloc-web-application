@@ -5,6 +5,7 @@ import com.backend.backend.service.LocalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
@@ -36,4 +37,10 @@ public class LocalController {
     public void excluirLocal(@PathVariable Long id) {
         localService.excluirLocal(id);
     }
+
+    @PutMapping("/{id}")
+    public Local atualizarLocal(@PathVariable Long id, @RequestBody Local localAtualizado) {
+        return localService.atualizarLocal(id, localAtualizado);
+    }
+
 }

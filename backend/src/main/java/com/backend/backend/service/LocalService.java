@@ -39,4 +39,18 @@ public class LocalService {
         // Excluir o local
         localRepository.delete(local);
     }
+
+    public Local atualizarLocal(Long id, Local localAtualizado) {
+        // Busca o local existente no banco de dados
+        Local localExistente = localRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Local não encontrado."));
+
+        // Atualiza os campos
+        localExistente.setNome(localAtualizado.getNome());
+        localExistente.setDescricao(localAtualizado.getDescricao());
+
+        // Salva o local atualizado
+        return localRepository.save(localExistente);
+    }
+
 }

@@ -9,6 +9,7 @@ public class Local {
     private Long id;
 
     private String nome;
+
     private String descricao;
 
     public Long getId() {

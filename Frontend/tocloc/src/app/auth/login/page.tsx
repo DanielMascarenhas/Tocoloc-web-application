@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext'; // Hook de autenticação
 import Button from '@/components/Button'; 
 import Input from '@/components/Input'; 
-import LoginLayout from '../layout';
 import axios from 'axios'; 
 import { useRouter } from 'next/navigation'; 
 

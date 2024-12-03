@@ -34,4 +34,11 @@ public class ReservaController {
     public List<ReservaDTO> listarReservasPorPessoa(@RequestParam Long userId) {
         return reservaService.listarReservasPorPessoa(userId);
     }
+
+    // Cancelar uma reserva
+    @DeleteMapping("/{id}")
+    public void cancelarReserva(@PathVariable Long id) {
+        reservaService.cancelarReserva(id);
+    }
+
 }

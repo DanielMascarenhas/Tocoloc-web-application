@@ -14,5 +14,7 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
      * @return Pessoa correspondente ou null se não encontrada.
      */
     Pessoa findByEmailAndSenha(String email, String senha);
+    Pessoa findByEmail(String email);
+
 }
 

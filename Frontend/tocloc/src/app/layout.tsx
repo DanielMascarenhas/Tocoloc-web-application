@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="h-full flex flex-col justify-center items-center gap-10
-        bg-[url('/Background_esportes.jpg')] bg-cover bg-fixed">
+        bg-[url('/Background_esportes.jpg')] bg-cover bg-fixed h-screen flex items-center justify-center">
         {/* Envolva os filhos com o AuthProvider */}
         <AuthProvider>
           {children}

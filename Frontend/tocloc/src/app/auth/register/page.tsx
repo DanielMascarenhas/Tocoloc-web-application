@@ -16,10 +16,18 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await axios.post('/api/register', { name, email, password });
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const response = await axios.post(`${apiUrl}/api/pessoas/register`, {
+        nome: name,
+        email,
+        senha: password,
+      });
 
       if (response.data.success) {
         setMessage('Usuário registrado com sucesso!');
+        setName('');
+        setEmail('');
+        setPassword('');
       } else {
         setMessage(response.data.message || 'Erro ao registrar usuário.');
       }
@@ -29,9 +37,10 @@ const Register: React.FC = () => {
     }
   };
 
+
   return (
-    <div className="max-w-sm mx-auto p-4">
-      <h1 className="text-xl font-bold mb-4">Registrar</h1>
+    <div className="max-w-sm mx-auto p-4 text-center">
+      <h1 className="text-xl font-bold mb-4 text-blue-500">Registrar</h1>
       {message && <p className="text-red-500">{message}</p>}
       <input
         type="text"

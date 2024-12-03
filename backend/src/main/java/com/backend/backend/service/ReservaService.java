@@ -95,5 +95,11 @@ public class ReservaService {
         return "Nome do Local"; // Exemplo fixo
     }
 
+    public void cancelarReserva(Long reservaId) {
+        if (!reservaRepository.existsById(reservaId)) {
+            throw new RuntimeException("Reserva com ID " + reservaId + " não encontrada.");
+        }
+        reservaRepository.deleteById(reservaId);
+    }
 
 }

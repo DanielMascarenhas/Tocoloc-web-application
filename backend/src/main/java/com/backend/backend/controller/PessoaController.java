@@ -52,4 +52,38 @@ public class PessoaController {
         }
     }
 
+    /**
+     * Método para registrar uma nova pessoa.
+     *
+     * @param pessoa Dados da nova pessoa.
+     * @return Confirmação de sucesso ou mensagem de erro.
+     */
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, Object>> registrarPessoa(@RequestBody Pessoa pessoa) {
+        if (pessoa.getNome() == null || pessoa.getEmail() == null || pessoa.getSenha() == null) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Todos os campos são obrigatórios."
+            ));
+        }
+
+        // Verifica se o e-mail já está registrado
+        if (pessoaRepository.findByEmail(pessoa.getEmail()) != null) {
+            return ResponseEntity.status(400).body(Map.of(
+                    "success", false,
+                    "message", "E-mail já está em uso."
+            ));
+        }
+
+        // Salva o usuário no banco
+        pessoa.setAdmin(false); // Por padrão, não é admin
+        pessoaRepository.save(pessoa);
+
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Usuário registrado com sucesso!"
+        ));
+    }
+
+
 }

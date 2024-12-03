@@ -68,7 +68,7 @@ const Login: React.FC = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button onClick={handleLogin} className="w-full mb-4">Login</Button>
+      <Button onClick={handleLogin}>Login</Button>
 
       <div className="text-center mt-4">
         <p className="text-gray-500">

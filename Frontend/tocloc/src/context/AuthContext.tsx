@@ -1,12 +1,13 @@
 'use client';
 
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { useRouter, usePathname } from 'next/navigation'; // usePathname para o caminho atual
+import { useRouter, usePathname } from 'next/navigation';
 
 interface User {
   id: string;
   name: string;
   email: string;
+  admin: boolean; // Indica se o usuário é administrador
 }
 
 type AuthContextType = {
@@ -32,24 +33,32 @@ export const useAuth = (): AuthContextType => {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-  const pathname = usePathname(); // Obtém o caminho atual da rota
+  const pathname = usePathname();
 
-  // Defina as rotas públicas
   const publicRoutes = ['/auth/login', '/auth/register', '/public-page'];
+  const adminRoutes = ['/admin']; // Rotas acessíveis apenas por administradores
+  const userRoutes = ['/usuario']; // Rotas acessíveis apenas por usuários comuns
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
     const savedUser = localStorage.getItem('user');
 
-    // Permitir rotas públicas sem redirecionamento
     if (publicRoutes.includes(pathname)) return;
 
     if (token && savedUser) {
-      setUser(JSON.parse(savedUser));
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+
+      // Verificar permissões
+      if (adminRoutes.includes(pathname) && !parsedUser.admin) {
+        router.push('/usuario'); // Redireciona para usuário comum se não for admin
+      } else if (userRoutes.includes(pathname) && parsedUser.admin) {
+        router.push('/admin'); // Redireciona para admin se for admin
+      }
     } else {
-      router.push('/auth/login'); // Redireciona para login se não for uma rota pública e não estiver autenticado
+      router.push('/auth/login'); // Redireciona para login
     }
-  }, [pathname, router]); // Adicione pathname como dependência
+  }, [pathname, router]);
 
   const logout = () => {
     localStorage.removeItem('userToken');

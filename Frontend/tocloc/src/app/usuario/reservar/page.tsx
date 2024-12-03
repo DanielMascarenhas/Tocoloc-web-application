@@ -44,7 +44,7 @@ const ReservarLocais: React.FC = () => {
     // Verifica se o usuário está autenticado via contexto
     if (!user || !user.id) {
       alert('Você precisa estar logado para realizar uma reserva.');
-      router.push('/login'); // Redireciona para a página de login
+      router.push('/auth/login'); // Redireciona para a página de login
       return;
     }
 

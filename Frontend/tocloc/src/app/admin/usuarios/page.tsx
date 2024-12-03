@@ -3,110 +3,75 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-interface Reserva {
-  id: number;
-  localId: number;
-  userId: number;
-  startDate: string;
-  endDate: string;
-  startTime: string;
-  endTime: string;
-}
-
-interface Local {
+interface Pessoa {
   id: number;
   nome: string;
+  email: string;
 }
 
-const MinhasReservas: React.FC = () => {
-  const [reservas, setReservas] = useState<Reserva[]>([]);
-  const [locais, setLocais] = useState<Record<number, string>>({});
+const ListaUsuarios: React.FC = () => {
+  const [usuarios, setUsuarios] = useState<Pessoa[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const userId = 1; // Substitua pelo ID do usuário autenticado (ex.: contexto, token, etc.)
-
   useEffect(() => {
-    const fetchReservas = async () => {
+    const fetchUsuarios = async () => {
       try {
-        setLoading(true);
-
-        
-
-        // Buscar reservas do usuário
-        const reservasResponse = await axios.get(`/api/reservas?userId=${userId}`);
-        setReservas(reservasResponse.data);
-
-        // Buscar nomes dos locais
-        const locaisResponse = await axios.get('/api/locais');
-        const locaisMap: Record<number, string> = {};
-        locaisResponse.data.forEach((local: Local) => {
-          locaisMap[local.id] = local.nome;
-        });
-        setLocais(locaisMap);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const response = await axios.get(`${apiUrl}/api/pessoas/listar`);
+        setUsuarios(response.data);
       } catch (error) {
-        console.error('Erro ao buscar reservas ou locais:', error);
-        setError('Não foi possível carregar suas reservas.');
+        console.error('Erro ao buscar usuários:', error);
+        setError('Não foi possível carregar a lista de usuários.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchReservas();
-  }, [userId]);
+    fetchUsuarios();
+  }, []);
 
-  const handleCancelar = async (id: number) => {
+  const handleDelete = async (id: number) => {
+    const confirmDelete = window.confirm('Você tem certeza que deseja excluir este usuário?');
+    if (!confirmDelete) return;
+
     try {
-      const confirm = window.confirm('Tem certeza que deseja cancelar esta reserva?');
-      if (!confirm) return;
-
-      // Chamar API para deletar a reserva
-      await axios.delete(`/api/reservas/${id}`);
-
-      // Atualizar a lista de reservas localmente após deletar
-      setReservas((prev) => prev.filter((reserva) => reserva.id !== id));
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      await axios.delete(`${apiUrl}/api/pessoas/${id}`);
+      setUsuarios((prevUsuarios) => prevUsuarios.filter((usuario) => usuario.id !== id));
     } catch (error) {
-      console.error('Erro ao cancelar a reserva:', error);
-      alert('Não foi possível cancelar a reserva. Tente novamente.');
+      console.error('Erro ao excluir usuário:', error);
+      alert('Não foi possível excluir o usuário. Tente novamente.');
     }
   };
 
-  if (loading) return <div>Carregando suas reservas...</div>;
+  if (loading) return <div>Carregando usuários...</div>;
   if (error) return <div className="text-red-500">Erro: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold mb-4">Minhas Reservas</h1>
-      {reservas.length === 0 ? (
-        <p>Você não tem reservas.</p>
+    <div className="min-h-screen bg-gray-100 p-6 text-black">
+      <h1 className="text-2xl font-bold mb-4">Lista de Usuários</h1>
+      {usuarios.length === 0 ? (
+        <p>Nenhum usuário encontrado.</p>
       ) : (
         <table className="table-auto w-full bg-white shadow-lg rounded-lg">
           <thead className="bg-gray-200">
             <tr>
-              <th className="px-4 py-2 text-left">ID</th>
-              <th className="px-4 py-2 text-left">Local</th>
-              <th className="px-4 py-2 text-left">Data Início</th>
-              <th className="px-4 py-2 text-left">Hora Início</th>
-              <th className="px-4 py-2 text-left">Data Fim</th>
-              <th className="px-4 py-2 text-left">Hora Fim</th>
-              <th className="px-4 py-2 text-right">Ação</th>
+              <th className="px-4 py-2 text-left">Nome</th>
+              <th className="px-4 py-2 text-left">Email</th>
             </tr>
           </thead>
           <tbody>
-            {reservas.map((reserva) => (
-              <tr key={reserva.id} className="border-t">
-                <td className="px-4 py-2">{reserva.id}</td>
-                <td className="px-4 py-2">{locais[reserva.localId] || 'Local não encontrado'}</td>
-                <td className="px-4 py-2">{reserva.startDate}</td>
-                <td className="px-4 py-2">{reserva.startTime}</td>
-                <td className="px-4 py-2">{reserva.endDate}</td>
-                <td className="px-4 py-2">{reserva.endTime}</td>
-                <td className="px-4 py-2 text-right">
+            {usuarios.map((usuario) => (
+              <tr key={usuario.id} className="border-t">
+                <td className="px-4 py-2">{usuario.nome}</td>
+                <td className="px-4 py-2">{usuario.email}</td>
+                <td className="px-4 py-2 text-center">
                   <button
-                    onClick={() => handleCancelar(reserva.id)}
+                    onClick={() => handleDelete(usuario.id)}
                     className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                   >
-                    Cancelar
+                    Excluir
                   </button>
                 </td>
               </tr>
@@ -118,4 +83,4 @@ const MinhasReservas: React.FC = () => {
   );
 };
 
-export default MinhasReservas;
+export default ListaUsuarios;

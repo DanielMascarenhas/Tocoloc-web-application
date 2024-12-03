@@ -2,11 +2,13 @@ package com.backend.backend.controller;
 
 import com.backend.backend.entity.Pessoa;
 import com.backend.backend.repository.PessoaRepository;
+import com.backend.backend.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,8 +19,9 @@ public class PessoaController {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public PessoaController() {
-    }
+    @Autowired
+    private PessoaService pessoaService;
+
 
     /**
      * Método para buscar pessoa por email e senha.
@@ -84,6 +87,19 @@ public class PessoaController {
                 "message", "Usuário registrado com sucesso!"
         ));
     }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<Pessoa>> listarPessoas() {
+        List<Pessoa> pessoas = pessoaRepository.findAll();
+        return ResponseEntity.ok(pessoas);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirPessoa(@PathVariable Long id) {
+        pessoaService.excluirPessoa(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }

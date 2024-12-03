@@ -33,16 +33,36 @@ public class ReservaController {
 
     // Criar uma nova reserva
     @PostMapping("/reservar")
-    public Reserva criarReserva(@RequestBody ReservaRequest reservaRequest) {
-        return reservaService.criarReserva(
-                reservaRequest.getLocalId(),
-                reservaRequest.getStartDate(),
-                reservaRequest.getEndDate(),
-                reservaRequest.getStartTime(),
-                reservaRequest.getEndTime(),
-                reservaRequest.getPessoaId()
-        );
+    public ResponseEntity<Map<String, Object>> criarReserva(@RequestBody ReservaRequest reservaRequest) {
+        try {
+            // Chama o serviço para criar a reserva
+            Reserva reserva = reservaService.criarReserva(
+                    reservaRequest.getLocalId(),
+                    reservaRequest.getStartDate(),
+                    reservaRequest.getEndDate(),
+                    reservaRequest.getStartTime(),
+                    reservaRequest.getEndTime(),
+                    reservaRequest.getPessoaId()
+            );
+
+            // Prepara a resposta de sucesso
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Reserva realizada com sucesso.");
+            response.put("reservaId", reserva.getId()); // Retorna o ID da reserva criada, se necessário
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            // Prepara a resposta de erro
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
+
 
     // Listar reservas por pessoa (userId)
     @GetMapping

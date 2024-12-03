@@ -41,54 +41,30 @@ const ReservarLocais: React.FC = () => {
   }, []);
 
   const handleSubmit = async () => {
-    // Verifica se o usuário está autenticado via contexto
     if (!user || !user.id) {
       alert('Você precisa estar logado para realizar uma reserva.');
-      router.push('/auth/login'); // Redireciona para a página de login
+      router.push('/auth/login');
       return;
     }
-
-    // A partir daqui, o usuário está autenticado, então o processo continua
+  
     if (!selectedLocal || !startDate || !endDate || !startTime || !endTime) {
       setError('Por favor, preencha todos os campos.');
       return;
     }
-
-    /*
+  
     try {
-      // Verifica se a reserva já existe
-      const response = await axios.post('/api/verificarReserva', {
-        localId: selectedLocal,
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+      // Realiza a reserva
+      const reservaResponse = await axios.post(`${apiUrl}/api/reservas/reservar`, {
+        localId: Number(selectedLocal),
         startDate,
         endDate,
         startTime,
         endTime,
+        pessoaId: Number(user.id),
       });
   
-      if (response.data.conflict) {
-        setError('Já existe uma reserva para este local na faixa de tempo selecionada.');
-        return;
-      }
-    */
-
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-      // Realiza a reserva enviando as datas e horas separadas
-      //const reservaResponse = await axios.post(`${apiUrl}/api/reservas/reservar`, {
-      const reservaResponse = await axios.post(`${apiUrl}/api/reservas/reservar`, {
-
-        localId: Number(selectedLocal), // Certifique-se de enviar como String ou número conforme esperado no backend
-        startDate, // Data de início
-        endDate, // Data de término
-        startTime, // Hora de início
-        endTime, // Hora de término
-        pessoaId: Number(user.id), // O ID do usuário
-      });
-
-      
-      
-
       if (reservaResponse.data.success) {
         setSuccess('Reserva realizada com sucesso!');
         setError('');
@@ -100,11 +76,17 @@ const ReservarLocais: React.FC = () => {
       } else {
         setError('Erro ao realizar a reserva. Tente novamente.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao validar ou realizar reserva:', error);
-      setError('Houve um problema ao tentar realizar a reserva. Tente novamente.');
+  
+      // Verifica se existe uma mensagem de erro vinda do backend
+      const backendMessage =
+        error.response?.data?.message || 'Houve um problema ao tentar realizar a reserva. Tente novamente.';
+  
+      setError(backendMessage);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 text-black">

@@ -22,4 +22,5 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     // Listar reservas por pessoa
     List<Reserva> findByPessoaId(long pessoaId);
+
 }

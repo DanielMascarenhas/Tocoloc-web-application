@@ -40,5 +40,5 @@ public class ReservaController {
     public void cancelarReserva(@PathVariable Long id) {
         reservaService.cancelarReserva(id);
     }
-
+    
 }

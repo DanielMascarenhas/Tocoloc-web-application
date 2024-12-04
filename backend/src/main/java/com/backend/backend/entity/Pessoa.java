@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class Pessoa {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Garante que o banco controla o AUTO_INCREMENT
     private Long id;
     private String nome;
     private String email;

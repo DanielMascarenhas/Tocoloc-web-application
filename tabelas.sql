@@ -1,3 +1,5 @@
+DROP DATABASE reservas;
+
 CREATE DATABASE reservas;
 
 USE reservas;
